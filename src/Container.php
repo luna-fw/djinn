@@ -74,6 +74,12 @@ class Container implements ContainerContract, ContainerConfigContract
 
     }
 
+    /**
+     * @param array $parametersInfo
+     * @param string $who
+     * @return array
+     * @throws UnresolvableContainerException
+     */
     protected function resolveParameters(array $parametersInfo, string $who): array
     {
         $params = [];
@@ -111,6 +117,10 @@ class Container implements ContainerContract, ContainerConfigContract
         $this->bindings[$wish] = new ConcreteBinding($granted, $this);
     }
 
+    /**
+     * @param string $wish
+     * @param $granted
+     */
     public function singleton(string $wish, $granted): void
     {
         /** @var ?BindingContract $binding */
@@ -125,6 +135,11 @@ class Container implements ContainerContract, ContainerConfigContract
 
     }
 
+    /**
+     * @param string $who
+     * @param string $wish
+     * @param $granted
+     */
     public function contextual(string $who, string $wish, $granted): void
     {
         if (is_callable($granted)) {
@@ -141,6 +156,11 @@ class Container implements ContainerContract, ContainerConfigContract
 
     }
 
+    /**
+     * @param string $who
+     * @param string $wish
+     * @param $granted
+     */
     public function contextualSingleton(string $who, string $wish, $granted): void
     {
 
@@ -156,6 +176,13 @@ class Container implements ContainerContract, ContainerConfigContract
 
     }
 
+    /**
+     * @param string $method
+     * @param null $scope
+     * @return mixed
+     * @throws BadBindingContainerException
+     * @throws UnresolvableContainerException
+     */
     public function run(string $method, $scope = null)
     {
 
