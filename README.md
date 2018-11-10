@@ -1,5 +1,6 @@
 # Luna Framework - DI Container
 
+[![Build Status](https://travis-ci.org/luna-fw/container.svg?branch=master)](https://travis-ci.org/luna-fw/container)
 [![Latest Stable Version](https://poser.pugx.org/luna-fw/container/v/stable)](https://packagist.org/packages/luna-fw/container)
 [![Total Downloads](https://poser.pugx.org/luna-fw/container/downloads)](https://packagist.org/packages/luna-fw/container)
 [![License](https://poser.pugx.org/luna-fw/container/license)](https://packagist.org/packages/luna-fw/container)
