@@ -1,0 +1,11 @@
+language: php
+
+php:
+  - hhvm-3
+  - hhvm-nightly
+
+sudo: false
+
+install: travis_retry composer install --no-interaction --prefer-dist --no-suggest
+
+script: vendor/bin/phpunit --verbose
