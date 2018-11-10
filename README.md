@@ -1,5 +1,9 @@
 # Luna Framework - DI Container
 
+[![Latest Stable Version](https://poser.pugx.org/luna-fw/container/v/stable)](https://packagist.org/packages/luna-fw/container)
+[![Total Downloads](https://poser.pugx.org/luna-fw/container/downloads)](https://packagist.org/packages/luna-fw/container)
+[![License](https://poser.pugx.org/luna-fw/container/license)](https://packagist.org/packages/luna-fw/container)
+
 This is the Luna Framework (Framework under development) dependency injection container.
 
 This package is completely independent from the rest of the framework. 
