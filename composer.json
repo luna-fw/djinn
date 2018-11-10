@@ -1,9 +1,10 @@
 {
   "name": "luna-fw/container",
+  "license": "MIT",
   "authors": [
     {
-      "name": "jefersonralmeida",
-      "email": "jefersonparanaense@gmail.com"
+      "name": "Jeferson R Almeida",
+      "email": "jeferson@almeida.rocks"
     }
   ],
   "autoload": {
