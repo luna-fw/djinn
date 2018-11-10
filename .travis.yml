@@ -1,8 +1,7 @@
 language: php
 
 php:
-  - hhvm-3
-  - hhvm-nightly
+  - php7.2
 
 sudo: false
 
