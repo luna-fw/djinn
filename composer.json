@@ -12,15 +12,7 @@
       "Luna\\Container\\Tests\\": "tests/app/"
     }
   },
-  "repositories": [
-    {
-      "type": "path",
-      "url": "../lunabench"
-    }
-  ],
   "require-dev": {
-    "phpunit/phpunit": "^7",
-    "luna-fw/lunabench": "*@dev",
-    "phpbench/phpbench": "^0.14.0"
+    "phpunit/phpunit": "^7"
   }
 }
