@@ -1,6 +1,6 @@
 <?php
 
-namespace Luna\Container\Contracts;
+namespace Luna\Djinn\Contracts;
 
 interface ContainerConfigContract
 {

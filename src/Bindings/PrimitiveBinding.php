@@ -1,8 +1,8 @@
 <?php
 
-namespace Luna\Container\Bindings;
+namespace Luna\Djinn\Bindings;
 
-use Luna\Container\Contracts\BindingContract;
+use Luna\Djinn\Contracts\BindingContract;
 
 class PrimitiveBinding implements BindingContract
 {

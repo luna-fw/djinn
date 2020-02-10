@@ -1,6 +1,6 @@
 <?php
 
-namespace Luna\Container\Tests;
+namespace Luna\Djinn\Tests;
 
 class ConcreteWithoutArguments implements Contract
 {

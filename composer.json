@@ -1,19 +1,26 @@
 {
-  "name": "luna-fw/container",
+  "name": "luna-fw/djinn",
   "license": "MIT",
   "authors": [
     {
       "name": "Jeferson R Almeida",
-      "email": "jeferson@almeida.rocks"
+      "email": "jeferson@webage.solutions"
     }
   ],
   "autoload": {
     "psr-4": {
-      "Luna\\Container\\": "src/",
-      "Luna\\Container\\Tests\\": "tests/app/"
+      "Luna\\Djinn\\": "src/",
+      "Luna\\Djinn\\Tests\\": "tests/app/"
     }
+  },
+  "require": {
+    "php": "^7.2",
+    "psr/container": "^1.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^7"
+  },
+  "provide": {
+    "psr/container-implementation": "1.0.0"
   }
 }

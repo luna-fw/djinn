@@ -1,13 +1,13 @@
 <?php
 
-namespace Luna\Container\Tests;
+namespace Luna\Djinn\Tests;
 
 /**
  * Interface Contract
  *
  * Fake contract.
  *
- * @package Luna\Container\Tests
+ * @package Luna\Djinn\Tests
  */
 interface Contract
 {

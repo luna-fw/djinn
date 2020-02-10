@@ -1,9 +1,9 @@
 <?php
 
-namespace Luna\Container\Bindings;
+namespace Luna\Djinn\Bindings;
 
-use Luna\Container\Contracts\BindingContract;
-use Luna\Container\Contracts\ContainerContract;
+use Luna\Djinn\Contracts\BindingContract;
+use Luna\Djinn\Contracts\ExtendedContainerContract;
 
 class ConcreteBinding implements BindingContract
 {
@@ -14,11 +14,11 @@ class ConcreteBinding implements BindingContract
     protected $concreteClass;
 
     /**
-     * @var ContainerContract
+     * @var ExtendedContainerContract
      */
     protected $container;
 
-    public function __construct(string $concreteClass, ContainerContract $container)
+    public function __construct(string $concreteClass, ExtendedContainerContract $container)
     {
         $this->concreteClass = $concreteClass;
         $this->container = $container;

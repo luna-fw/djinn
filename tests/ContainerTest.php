@@ -1,39 +1,51 @@
 <?php
 declare(strict_types=1);
 
-use Luna\Container\Container;
-use Luna\Container\Tests\ConcreteWithArguments;
-use Luna\Container\Tests\ConcreteWithContractDependency1;
-use Luna\Container\Tests\ConcreteWithContractDependency2;
-use Luna\Container\Tests\ConcreteWithDependency;
-use Luna\Container\Tests\ConcreteWithDependency2;
-use Luna\Container\Tests\ConcreteWithoutArguments;
-use Luna\Container\Tests\ConcreteWithoutArguments2;
-use Luna\Container\Tests\Contract;
+use Luna\Djinn\Djinn;
+use Luna\Djinn\Exceptions\NotFoundException;
+use Luna\Djinn\Tests\ConcreteWithArguments;
+use Luna\Djinn\Tests\ConcreteWithContractDependency1;
+use Luna\Djinn\Tests\ConcreteWithContractDependency2;
+use Luna\Djinn\Tests\ConcreteWithDependency;
+use Luna\Djinn\Tests\ConcreteWithDependency2;
+use Luna\Djinn\Tests\ConcreteWithoutArguments;
+use Luna\Djinn\Tests\ConcreteWithoutArguments2;
+use Luna\Djinn\Tests\Contract;
+use Luna\Djinn\Tests\Controller;
 use PHPUnit\Framework\TestCase;
 
 final class ContainerTest extends TestCase
 {
     /**
-     * @var Container
+     * @var Djinn
      */
     protected $container;
 
     protected function setUp()
     {
-        $this->container = new Container();
+        $this->container = new Djinn();
     }
 
+    /**
+     * @throws NotFoundException
+     */
     public function testConcreteClassResolutionWithoutBinding(): void
     {
+
+        // just use the class name as key, and get the class instance
         $this->assertInstanceOf(
             ConcreteWithoutArguments::class,
             $this->container->get(ConcreteWithoutArguments::class)
         );
     }
 
+    /**
+     * @throws NotFoundException
+     */
     public function testClosureResolution(): void
     {
+
+        // configure the container to resolve the class ConcreteWithArguments to the same class instance, with a given argument inside the closure.
         $this->container->bind(
             ConcreteWithArguments::class,
             function () {
@@ -44,17 +56,24 @@ final class ContainerTest extends TestCase
         /** @var ConcreteWithArguments $result */
         $result = $this->container->get(ConcreteWithArguments::class);
 
+        // assert the instance type
         $this->assertInstanceOf(
             ConcreteWithArguments::class,
             $result
         );
 
+        // assert the injected argument
         $this->assertEquals('my_argument1', $result->getAtt1());
     }
 
+    /**
+     * @see testClosureResolution
+     * @throws NotFoundException
+     */
     public function testClosureResolutionWithSubDependency(): void
     {
 
+        // first configure the container to resolve the ConcreteWithArguments class (like in testClosureResolution)
         $this->container->bind(
             ConcreteWithArguments::class,
             function () {
@@ -62,9 +81,10 @@ final class ContainerTest extends TestCase
             }
         );
 
+        // then configure the container to resolve ConcreteWithDependency using ConcreteWithArguments as dependency
         $this->container->bind(
             ConcreteWithDependency::class,
-            function (Container $container) {
+            function (Djinn $container) {
                 return new ConcreteWithDependency($container->get(ConcreteWithArguments::class));
             }
         );
@@ -85,8 +105,14 @@ final class ContainerTest extends TestCase
         $this->assertEquals('my_argument2', $result->getDependency()->getAtt1());
     }
 
+    /**
+     * @see testClosureResolution
+     * @throws NotFoundException
+     */
     public function testClosureResolutionWithRecursiveSubDependency(): void
     {
+
+        // first configure the container to resolve the ConcreteWithArguments class (like in testClosureResolution)
         $this->container->bind(
             ConcreteWithArguments::class,
             function () {
@@ -94,28 +120,34 @@ final class ContainerTest extends TestCase
             }
         );
 
+        // just try to get ConcreteWithDependency and let the container resolve everything by himself
         /** @var ConcreteWithDependency $result */
         $result = $this->container->get(ConcreteWithDependency::class);
 
+        // assert the main instance type
         $this->assertInstanceOf(
             ConcreteWithDependency::class,
             $result
         );
 
+        // assert the dependency type
         $this->assertInstanceOf(
             ConcreteWithArguments::class,
             $result->getDependency()
         );
 
+        // assert the dependency attribute
         $this->assertEquals('my_argument3', $result->getDependency()->getAtt1());
 
     }
 
     /**
-     * @group failing
+     * @throws NotFoundException
      */
     public function testInterfaceToImplementationResolution()
     {
+
+        // bind an interface to a concrete class
         $this->container->bind(
             Contract::class,
             ConcreteWithoutArguments::class
@@ -136,6 +168,7 @@ final class ContainerTest extends TestCase
 
     /**
      * Checks if the binded dependency always returns a fresh instance of the defined class (not a singleton)
+     * @throws NotFoundException
      */
     public function testEnsureThatWishGrantedByBindingIsFresh()
     {
@@ -156,8 +189,14 @@ final class ContainerTest extends TestCase
 
     }
 
+    /**
+     * @see testInterfaceToImplementationResolution
+     * @throws NotFoundException
+     */
     public function testInterfaceToClosureResolution()
     {
+
+        // bind a closure that just return a concrete instance that implements the interface
         $this->container->bind(
             Contract::class,
             function () {
@@ -178,6 +217,9 @@ final class ContainerTest extends TestCase
         );
     }
 
+    /**
+     * @throws NotFoundException
+     */
     public function testInterfaceToImplementationRecursive()
     {
         $this->container->bind(
@@ -205,6 +247,9 @@ final class ContainerTest extends TestCase
         $this->assertEquals('my_argument4', $result->getDependency()->getAtt1());
     }
 
+    /**
+     * @throws NotFoundException
+     */
     public function testEnsureThatWishGrantedBySingletonIsAlwaysTheSameInstance()
     {
         $this->container->singleton(
@@ -224,6 +269,9 @@ final class ContainerTest extends TestCase
 
     }
 
+    /**
+     * @throws NotFoundException
+     */
     public function testContextualBindingToClosure()
     {
         $this->container->contextual(
@@ -255,6 +303,9 @@ final class ContainerTest extends TestCase
         $this->assertEquals('value2', $result2->getDependency()->getAtt1());
     }
 
+    /**
+     * @throws NotFoundException
+     */
     public function testContextualBindingToImplementation()
     {
 
@@ -284,8 +335,9 @@ final class ContainerTest extends TestCase
     }
 
     /**
-     * @expectedException \Luna\Container\Exceptions\UnresolvableContainerException
-     * @expectedExceptionMessage Cannot resolve dependency 'Luna\Container\Tests\ConcreteWithArguments $dependency' for Luna\Container\Tests\ConcreteWithDependency
+     * @expectedException \Luna\Djinn\Exceptions\NotFoundException
+     * @expectedExceptionMessage Can't resolve your wish 'Luna\Djinn\Tests\ConcreteWithArguments'. Check your binding.
+     * @throws NotFoundException
      */
     public function testImpossibleToResolve()
     {
@@ -293,8 +345,8 @@ final class ContainerTest extends TestCase
     }
 
     /**
-     * @expectedException \Luna\Container\Exceptions\BadBindingContainerException
-     * @expectedExceptionMessage Can't resolve the class 'notaclass'. Check your binding.
+     * @expectedException \Luna\Djinn\Exceptions\NotFoundException
+     * @expectedExceptionMessage Can't resolve your wish 'notaclass'. Check your binding.
      */
     public function testBadBinding()
     {
@@ -302,6 +354,9 @@ final class ContainerTest extends TestCase
         $this->container->get(Contract::class);
     }
 
+    /**
+     * @throws NotFoundException
+     */
     public function testContextualSingletonBindingToImplementation()
     {
 
@@ -341,7 +396,7 @@ final class ContainerTest extends TestCase
     }
 
     /**
-     *
+     * @throws NotFoundException
      */
     public function testContextualBindingByName()
     {
@@ -359,7 +414,7 @@ final class ContainerTest extends TestCase
     }
 
     /**
-     *
+     * @throws NotFoundException
      */
     public function testContextualSingletonBindingByName()
     {
@@ -384,23 +439,23 @@ final class ContainerTest extends TestCase
     }
 
     /**
-     *
+     * @throws NotFoundException
      */
     public function testContextualBindingByNameToPrimitive()
     {
         $this->container->contextual(
-            \Luna\Container\Tests\Controller::class,
+            Controller::class,
             '$arg1',
             5
         );
 
         $this->container->contextual(
-            \Luna\Container\Tests\Controller::class,
+            Controller::class,
             '$arg2',
             'an awesome string'
         );
 
-        $result = $this->container->get(\Luna\Container\Tests\Controller::class);
+        $result = $this->container->get(Controller::class);
 
         $this->assertEquals(5, $result->getArg1());
         $this->assertEquals('an awesome string', $result->getArg2());
@@ -408,16 +463,16 @@ final class ContainerTest extends TestCase
     }
 
     /**
-     *
+     * @throws NotFoundException
      */
     public function testRunMethod()
     {
         $this->container->bind(Contract::class, ConcreteWithoutArguments::class);
-        $class = \Luna\Container\Tests\Controller::class;
+        $class = Controller::class;
         $method = 'action1';
         $this->container->contextual("$class:$method", '$id', 567);
 
-        $object = new \Luna\Container\Tests\Controller(1, 'a');
+        $object = new Controller(1, 'a');
         $result = $this->container->run($method, $object);
 
         $this->assertInstanceOf(ConcreteWithoutArguments::class, $result[0]);
@@ -425,12 +480,12 @@ final class ContainerTest extends TestCase
     }
 
     /**
-     *
+     * @throws NotFoundException
      */
     public function testRunStaticMethod()
     {
         $this->container->bind(Contract::class, ConcreteWithoutArguments::class);
-        $class = \Luna\Container\Tests\Controller::class;
+        $class = Controller::class;
         $method = 'staticMethod';
         $this->container->contextual("$class:$method", '$arg', 876);
 
@@ -441,13 +496,13 @@ final class ContainerTest extends TestCase
     }
 
     /**
-     *
+     * @throws NotFoundException
      */
     public function testRunFunction()
     {
         require_once __DIR__ . '/app/function.php';
         $this->container->bind(Contract::class, ConcreteWithoutArguments::class);
-        $function = '\Luna\Container\Tests\func';
+        $function = '\Luna\Djinn\Tests\func';
         $this->container->contextual($function, '$arg', 598);
 
         $result = $this->container->run($function);
@@ -456,4 +511,17 @@ final class ContainerTest extends TestCase
         $this->assertEquals(598, $result[1]);
     }
 
+    /**
+     * @throws NotFoundException
+     */
+    public function testPrimitiveBinding()
+    {
+        $this->container->contextual(ConcreteWithArguments::class, '$arg1', 3);
+
+        /** @var ConcreteWithArguments $result */
+        $result = $this->container->get(ConcreteWithArguments::class);
+
+        $this->assertInstanceOf(ConcreteWithArguments::class, $result);
+        $this->assertEquals(3, $result->getAtt1());
+    }
 }

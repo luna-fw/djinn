@@ -1,13 +1,13 @@
 <?php
 
-namespace Luna\Container\Tests;
+namespace Luna\Djinn\Tests;
 
 /**
  * Class ConcreteWithDependency
  *
  * Fake class that have a dependency of a contract
  *
- * @package Luna\Container\Tests
+ * @package Luna\Djinn\Tests
  */
 class ConcreteWithContractDependency1
 {
